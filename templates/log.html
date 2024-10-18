@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+
+    <!-- JS của Select2 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        .col-5 {
+            width: 24%;
+            float: left;
+            display: block;
+            border-radius: 8px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .x1 {
+            background-color: #8FC3CE;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 0 92px;
+            justify-content: center;
+        }
+
+        .head1 {
+            margin: 10px;
+        }
+
+        button.btn {
+            background: #8FC3CE;
+        }
+
+        .btn.head1 {
+            border: 1px;
+            border-radius: 25px;
+        }
+
+        .btn-head {
+            padding: 5px 15px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-head:hover {
+            background: #2099b1;
+        }
+
+        .result {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            max-width: 100%;
+            padding: 8px;
+            gap: 35px 5px;
+        }
+
+        /*------------------------------------------------------------------------------------------------*/
+        /* Keyframes for fadeInUp animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* create form */
+        .popup-box {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: fit-content;
+            text-align: left;
+            opacity: 0;
+            transform: scale(0.8);
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+
+        #adminForm {
+            display: flex;
+            flex-direction: column;
+            width: 400px;
+        }
+
+        .form-label {
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #444;
+            text-align: left;
+        }
+
+        .form-input {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .button-container {
+            text-align: center;
+        }
+
+        .btn-submit {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            background-color: #1a9bb5;
+            color: #fff;
+        }
+
+        .btn-close-popup {
+            margin-top: 12px;
+            padding: 12px 24px;
+            color: #e74c3c;
+            font-weight: inherit;
+            background-color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+
+        /* .btn-submit:hover,  */
+        .btn-close-popup:hover {
+            background-color: #f34211;
+            color: #fff;
+        }
+
+        /* Animation for popup */
+        .overlay-container.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        /*------------------------------------------------------------------------------------------------*/
+
+        /* login form */
+        .btn-login-popup {
+            margin-left: 50px;
+            padding: 5px 15px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-login-popup:hover {
+            background-color: #2099b1;
+        }
+
+        .overlay-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1;
+        }
+
+        .popup-login-box {
+            background: #fff;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+            width: 320px;
+            text-align: center;
+            opacity: 0;
+            transform: scale(0.8);
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+
+        .form-login {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .uploads {
+            display: none
+        }
+
+        .random_img {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            max-width: 100%;
+            padding: 8px;
+            gap: 35px 5px;
+        }
+
+        .preview_img {
+            width: 250px;
+            height: 250px;
+            margin: 50px;
+            border: 1px dashed;
+            border-radius: 8px;
+            display: none;
+            overflow: hidden;
+        }
+
+        #categorySelect {
+            padding: 2px 9px;
+            color: #222;
+        }
+        /*------------------------------------------------------------------------------------------------*/
+    </style>
+</head>
+
+<body>
+    <div class="x1">
+        <div class="mb-5 header container text-center">
+            <a href="#" onclick="loadRandomFoodImages(); resetPage();">
+                <div class="logo head1">
+                    <img src="static/logo.png" style="width: 40px">
+                </div>
+            </a>
+
+            <!-- create form -->
+            <button class="btn-head head1" onclick="openCreateForm()">Create</button>
+            <div id="createForm" class="overlay-container">
+                <div class="popup-box">
+                    <div style="display: flex;justify-content: center;align-items: center;">
+                        <div class="preview_img">
+                            <img id="previewImage" style="width: 100%;height: 100%; object-fit: contain;" />
+                        </div>
+                        <div>
+                            <form id="adminForm">
+                                <label class="form-label" for="imagePath">Choose Image:</label>
+                                <input class="form-input" type="file" id="imageFile" name="imageFile" accept="image/*"
+                                    onchange="load_image(event)" required>
+                                <label class="form-label" for="fname">Food Name:</label>
+                                <input class="form-input" type="text" id="fname" name="fname">
+                                <label class="form-label" for="categories">Choose Categories:</label>
+                                <select id="categorySelect" multiple>
+                                    <!-- Các tùy chọn sẽ được thêm từ API -->
+                                </select>
+                                <label class="form-label" for="description">Description:</label>
+                                <textarea class="form-input" type="text" id="description" name="description"
+                                    style="height: 120px;"></textarea>
+                            </form>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="button-container" style="padding: 10px 0 0">
+                            <button class="btn-submit" type="button" onclick="addImage(event)">Add Image</button>
+                        </div>
+                        <div class="button-container">
+                            <button class="btn-close-popup" onclick="closeCreateForm()">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--------------------------------------------------------------------------------------------------->
+
+            <div class="head1">
+                <input class="form-control w-100" type="file" id="formFile" onchange="loadFile(event)" required>
+            </div>
+            <div class="text-center row" style="margin: 10px 1px;">
+                <button class="btn-head head1" style="width: 65px; height: 38px; padding: 0">
+                    <div class="detect" style="width: 65px;">
+                        <span>Search</span>
+                    </div>
+                    <div class="detecting">
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    </div>
+                </button>
+            </div>
+
+            <!---------------------------------------------------------------------------------------------------->
+        </div>
+    </div>
+    <!----------------------------------------------------------------------------------------------------------------->
+    <div class="container">
+        <ul class="random_img">
+
+        </ul>
+    </div>
+
+
+    <!----------------------------------------------------------------------------------------------------------------->
+    <div class="container">
+        <div class="text-center mt-5 mb-5 uploads">
+            <img id="output" style=" width: 250px; height: 250px; object-fit: contain;">
+        </div>
+    </div>
+    <div class="container uploads" style="margin-bottom: 60px;">
+        <h3 class="food_name">Result: </h3>
+        <hr>
+        <ul class="row result">
+
+        </ul>
+    </div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script>
+
+    const API_BASE_URL = '127.0.0.1:5000';
+    let token = null;
+    let isAdmin = false;
+
+    function loadRandomFoodImages() {
+        $('#formFile').val('');
+        $.ajax({
+            url: '/random-food-images',
+            type: 'GET',
+            success: function (response) {
+                $('.random_img').empty();
+
+                foodName = response.foodName;
+                list_imagePath = response.list_imagePath;
+                foodDescription = response.foodDescription;
+
+                // Lặp qua dữ liệu để hiển thị từng món ăn
+                for (var i = 0; i < 60; i++) {
+                    $(".random_img").append(`
+                        <li class="col-5 text-white" style="list-style: none;"> 
+                            <div style="width: 100%;height: 200px;overflow: hidden;border-radius: 8px 8px 0 0;text-align: center;">
+                                <img loading="lazy" src="${list_imagePath[i]}" style="width: 100%;height: 200px;display: inline-block; object-fit: contain;overflow: hidden;border-radius: 8px 8px 0 0;">
+                            </div>
+                            <div style="width: 100%;overflow: hidden;text-align: center;">
+                                <h5 style="color: #222;text-align: center;font-size: 12px;margin-top: 8px;">${foodName[i]}</h5>
+                            </div>
+                            <div style="width: 100%;overflow: hidden;text-align: center;">
+                                <p style="height: 100px;width: 100%;overflow-y: scroll;color: #888;scrollbar-width: none;font-size: 10px;padding: 3px 16px; text-align: justify;-ms-overflow-style: none;white-space: pre-line">${foodDescription[i]}</p>
+                            </div>
+                        </li>
+                    `);
+                }
+                console.log(response);
+
+            },
+            error: function (jqXHR, textStatus, errorMessage) {
+                console.error('Error fetching random food images:', errorMessage);
+            }
+        });
+    }
+
+    // create new image
+    function openCreateForm() {
+        const overlay = document.getElementById('createForm');
+        overlay.classList.add('show');
+        var submitButton = document.querySelector('.btn-submit');
+        submitButton.disabled = false;
+        submitButton.innerHTML = "Add Image";
+        loadCategories();
+    }
+
+    function closeCreateForm() {
+        const overlay = document.getElementById('createForm');
+        overlay.classList.remove('show');
+
+        var submitButton = document.querySelector('.btn-submit');
+        submitButton.disabled = false;
+        submitButton.innerHTML = "Add Image";
+
+        // Reset giá trị các trường input
+        document.getElementById('imageFile').value = '';
+        document.getElementById('fname').value = '';
+        document.getElementById('description').value = '';
+
+        // Ẩn ảnh xem trước
+        let previewElements = document.querySelectorAll('.preview_img');
+        previewElements.forEach(function (element) {
+            element.style.display = 'none';
+        });
+    }
+
+    var load_image = function (event) {
+        var previewImage = document.getElementById('previewImage');
+        previewImage.src = URL.createObjectURL(event.target.files[0]);
+        previewImage.onload = function () {
+            URL.revokeObjectURL(previewImage.src);
+        };
+
+        let previewElements = document.querySelectorAll('.preview_img');
+        previewElements.forEach(function (element) {
+            element.style.display = 'block';
+        });
+    };
+
+
+    function addImage(event) {
+        event.preventDefault();
+
+        var form_Data = new FormData();
+
+        // Lấy dữ liệu từ các input
+        var imageFile = document.getElementById('imageFile').files[0];  // Lấy file ảnh từ input type="file"
+        var foodName = document.getElementById('fname').value;
+        var description = document.getElementById('description').value;
+        var categories = document.getElementById('categorySelect').value;
+
+        if (!imageFile) {
+            alert('Please select an image.');
+            return false;
+        }
+
+        form_Data.append('imageFile', imageFile);
+        form_Data.append('fname', foodName);
+        form_Data.append('description', description);
+        form_Data.append('categories', JSON.stringify(categories)); 
+
+        $.ajax({
+            url: '/add-image',
+            type: 'POST',
+            data: form_Data,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                var submitButton = document.querySelector('.btn-submit');
+                submitButton.disabled = true;
+                submitButton.innerHTML = "Uploading...";
+                alert('Image uploaded successfully!');
+                document.getElementById('imageFile').value = '';
+                document.getElementById('fname').value = '';
+                document.getElementById('description').value = '';
+                $('#categorySelect').val(null).trigger('change');
+
+                closeCreateForm();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                var submitButton = document.querySelector('.btn-submit');
+                submitButton.disabled = false;
+                submitButton.innerHTML = "Add Image";
+
+                alert('An error occurred while uploading the image.');
+                document.getElementById('imageFile').value = '';
+                document.getElementById('fname').value = '';
+                document.getElementById('description').value = '';
+                $('#categorySelect').val(null).trigger('change');
+            }
+        });
+    }
+
+    function togglePopup() {
+        const overlay = document.getElementById('popupOverlay');
+        overlay.classList.toggle('show');
+    }
+
+    // loadfile
+    var loadFile = function (event) {
+        var output = document.getElementById('output');
+        output.src = URL.createObjectURL(event.target.files[0]);
+        output.onload = function () {
+            URL.revokeObjectURL(output.src)
+        }
+
+        // Hiển thị phần "uploads" và ẩn phần "random_img"
+        let uploadElements = document.querySelectorAll('.uploads');
+        let randomImgElements = document.querySelectorAll('.random_img');
+
+        uploadElements.forEach(function (element) {
+            element.style.display = 'block';
+        });
+
+        randomImgElements.forEach(function (element) {
+            element.style.display = 'none';
+        });
+    };
+
+    function searchImages() {
+        $(".detect").attr("style", "display: none;");
+        $(".detecting").attr("style", "display: block;");
+
+        var fileInput = $('#formFile')[0].files[0];
+        if (fileInput) {
+            var fileExtension = fileInput.name.split('.').pop().toLowerCase();
+            var allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+
+            if (allowedExtensions.indexOf(fileExtension) === -1) {
+                $(".detecting").attr("style", "display: none;");
+                $(".detect").attr("style", "display: block;");
+                alert('Invalid file format. Only files with the format: ' + allowedExtensions.join(', '));
+                return;
+            }
+
+            var formData = new FormData();
+            formData.append('image', fileInput);
+            var url = window.location.href;
+
+            $.ajax({
+                url: '/search-similar',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    list_images = response.list_images;
+                    list_food_names = response.list_food_names;
+                    descriptions = response.descriptions;
+                    $(".result").empty();
+                    $(".food_name").attr("style", "display: block;");
+                    $(".food_name").html('Result: ');
+
+                    for (var i = 0; i < 40; i++) {
+                        $(".result").append(`
+                        <li class="col-5 text-white" style = "padding: 0;"> 
+                            <div style="width: 100%;height: 200px;overflow: hidden;border-radius: 8px 8px 0 0;text-align: center;">
+                                <img loading="lazy" src="${list_images[i]}" style="width: 100%;height: 200px;display: inline-block; object-fit: contain;overflow: hidden;border-radius: 8px 8px 0 0;">
+                            </div>
+                            <div style="width: 100%;overflow: hidden;text-align: center;">
+                                <h5 style="color: #222;text-align: center;font-size: 12px;margin-top: 8px;">${list_food_names[i]}</h5>
+                            </div>
+                            <div style="width: 100%;overflow: hidden;text-align: center;">
+                                 <p style="height: 100px;width: 100%;overflow-y: scroll;color: #888;scrollbar-width: none;font-size: 10px;padding: 3px 16px; text-align: justify;-ms-overflow-style: none;white-space: pre-line">${descriptions[i]}</p>
+                            </div>
+                            
+                        </li>
+                    `);
+                    }
+
+                    console.log(response);
+                    $(".detect").attr("style", "display: block;");
+                    $(".detecting").attr("style", "display: none;");
+                },
+                error: function (jqXHR, textStatus, errorMessage) {
+                    $(".detecting").attr("style", "display: none;");
+                    $(".detect").attr("style", "display: block;");
+                    alert("An error occurred during the prediction. Please try again!");
+                    console.log(errorMessage);
+                }
+            });
+        } else {
+            alert("Please select a file!");
+            $(".detecting").attr("style", "display: none;");
+            $(".detect").attr("style", "display: block;");
+            return;
+        }
+    }
+
+    function resetPage() {
+        $(".uploads").css("display", "none");
+        $(".random_img").css("display", "flex");
+        $(".result").empty(); // Xóa các kết quả trước đó
+        $(".food_name").css("display", "none");
+        $('#formFile').val('');
+    }
+
+    function loadCategories() {
+            $.ajax({
+                url: '/get-list-categories',
+                method: 'GET',
+                dataType: 'json',
+                success: function(categories) {
+                    const categorySelect = $('#categorySelect');
+                    categorySelect.empty(); // Xóa các tùy chọn hiện có
+
+                    if (Array.isArray(categories)) {
+                        $.each(categories, function(index, category) {
+                            if (category.name && category.id) {
+                                const option = $('<option>')
+                                    .val(category.id) // Sử dụng id cho value
+                                    .text(category.name); // Sử dụng name cho hiển thị
+
+                                categorySelect.append(option); // Thêm vào select
+                            }
+                        });
+                        // Khởi động Select2 cho phần tử select
+                        $('#categorySelect').select2({
+                            placeholder: "Choose categories",
+                            allowClear: true,
+                        });
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Error fetching categories:', textStatus, errorThrown);
+                }
+            });
+        }
+
+
+    $(document).ready(function () {
+        $(".detecting").attr("style", "display: none;");
+        $(".food_name").attr("style", "display: none;");
+
+        loadRandomFoodImages();
+
+        // Gọi hàm searchImages khi click vào class .detect
+        $(".detect").click(function () {
+            searchImages();
+        });
+    });
+
+</script>
+
+</html>

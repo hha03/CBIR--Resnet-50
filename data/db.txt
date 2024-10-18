@@ -1,0 +1,43 @@
+CREATE TABLE accounts (
+    id INT AUTO_INCREMENT PRIMARY KEY,          	-- ID duy nhất cho mỗi tài khoản
+    username VARCHAR(50) NOT NULL UNIQUE,       	-- Tên người dùng, duy nhất
+    password VARCHAR(255) NOT NULL,             	-- Mật khẩu đã mã hóa
+    email VARCHAR(100) NOT NULL UNIQUE,        	 	-- Email, duy nhất
+    role TINYINT(1) DEFAULT 0,                  	-- Vai trò, mặc định là 0 (user)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Thời gian tạo tài khoản
+    last_login TIMESTAMP NULL                   	-- Thời gian đăng nhập cuối cùng
+);
+
+------------------------------------------------------------------------
+CREATE TABLE food (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+-----------------------------------------------------------------------
+CREATE TABLE food_images (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    food_id INT,
+    img_path VARCHAR(255) NOT NULL,
+    link VARCHAR(255),
+    description TEXT,
+    feature_vector LONGBLOB NOT NULL,
+    userId INT NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (food_id) REFERENCES food(id) ON DELETE CASCADE,
+    FOREIGN KEY (userId) REFERENCES accounts(id)
+);
+
+//////////////////////////////
+CREATE TABLE test (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    food_name VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+    label INT NOT NULL,
+    img_path VARCHAR(255) NOT NULL,
+    description TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+    feature LONGBLOB NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (label) REFERENCES food(id)
+);
+
+

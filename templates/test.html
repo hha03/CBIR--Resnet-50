@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask Food</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        .col-5 {
+            width: 20%;
+            /* Adjusted width to account for margin */
+            float: left;
+            margin-bottom: 25px;
+        }
+
+        .x1 {
+            background-color: #8FC3CE;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 0 92px;
+        }
+
+        .head1 {
+            margin: 10px;
+        }
+
+        button.btn {
+            background: #8FC3CE;
+        }
+
+        .btn.head1 {
+            border: 1px;
+            border-radius: 25px;
+        }
+
+        .btn-head {
+            padding: 5px 15px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-head:hover {
+            background: #2099b1;
+        }
+
+        /*------------------------------------------------------------------------------------------------*/
+        /* Keyframes for fadeInUp animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* create form */
+        .popup-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 320px;
+            text-align: center;
+            opacity: 0;
+            transform: scale(0.8);
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+
+        .adminForm {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-label {
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #444;
+            text-align: left;
+        }
+
+        .form-input {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .btn-submit {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            background-color: #1a9bb5;
+            color: #fff;
+        }
+
+        .btn-close-popup {
+            margin-top: 12px;
+            padding: 12px 24px;
+            color: #e74c3c;
+            font-weight: inherit;
+            background-color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* .btn-submit:hover,  */
+        .btn-close-popup:hover {
+            background-color: #f34211;
+            color: #fff;
+        }
+
+        /* Animation for popup */
+        .overlay-container.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        /*------------------------------------------------------------------------------------------------*/
+
+        /* login form */
+        .btn-login-popup {
+            margin-left: 50px;
+            padding: 5px 15px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-login-popup:hover {
+            background-color: #2099b1;
+        }
+
+        .overlay-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1;
+        }
+
+        .popup-login-box {
+            background: #fff;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+            width: 320px;
+            text-align: center;
+            opacity: 0;
+            transform: scale(0.8);
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+
+        .form-login {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .uploads{
+            display: none
+        }
+
+        /*------------------------------------------------------------------------------------------------*/
+    </style>
+</head>
+
+<body>
+    <div class="x1">
+        <div class="mb-5 header container text-center">
+            <a href="#" onclick="navigateHome()">
+                <div class="logo head1">
+                    <img src="static/logo.png" style="width: 40px">
+                </div>
+            </a>
+            <div class="head1">
+                <a href="#" onclick="navigateHome()" style="text-decoration: none;"></a>
+                <div class="btn btn-head" style="color: black;">Home Page</div>
+                </a>
+            </div>
+
+            <!-- create form -->
+            <button class="btn-head head1" onclick="openCreateForm()">Create</button>
+            <div id="createForm" class="overlay-container">
+                <div class="popup-box">
+                    <form id="adminForm" onsubmit="return addImage(event)">
+                        <label class="form-label" for="imagePath">Image Path:</label>
+                        <input class="form-input" type="text" id="imagePath" name="imagePath">
+                        <label class="form-label" for="source">Website URL:</label>
+                        <input class="form-input" type="text" id="source" name="source">
+                        <input class="btn-submit" type="submit" value="Add Image">
+                    </form>
+                    <button class="btn-close-popup" onclick="closeCreateForm()">Close</button>
+                </div>
+            </div>
+
+            <!--------------------------------------------------------------------------------------------------->
+
+            <div class="head1">
+                <input class="form-control w-100" type="file" id="formFile" onchange="loadFile(event)" required>
+            </div>
+            <div class="text-center row" style="margin: 10px 1px;">
+                <button class="btn-head head1" style="width: 65px; height: 38px; padding: 0">
+                    <div class="detect" style="width: 65px;">
+                        <span>Search</span>
+                    </div>
+                    <div class="detecting">
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    </div>
+                </button>
+            </div>
+
+            <!-- login -->
+            <button class="btn-login-popup head1" onclick="togglePopup()"> Login</button>
+            <div id="popupOverlay" class="overlay-container">
+                <div class="popup-login-box">
+                    <form class="form-login">
+                        <label class="form-label" for="name">Username:</label>
+                        <input class="form-input" type="text" id="name" name="name">
+                        <label class="form-label" for="pwd">Password:</label>
+                        <input class="form-input" type="password" id="pwd" name="pwd">
+                        <input class="btn-submit" type="submit" value="Login">
+                        <h4 id="check_error"></h4>
+                    </form>
+                    <button class="btn-close-popup" onclick="togglePopup()">Close </button>
+                </div>
+            </div>
+            <!---------------------------------------------------------------------------------------------------->
+        </div>
+    </div>
+<!----------------------------------------------------------------------------------------------------------------->
+    <!-- <div class="container">
+
+    </div> -->
+
+
+
+<!----------------------------------------------------------------------------------------------------------------->
+    <div class="container">
+        <div class="text-center mt-5 mb-5 uploads">
+            <img id="output" style=" width: 250px; height: 250px;">
+        </div>
+    </div>
+    <div class="container uploads" style="margin-bottom: 60px;">
+        <h3 class="food_name">Result: </h3>
+        <hr>
+        <div class="row result">
+
+        </div>
+    </div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script>
+
+    const API_BASE_URL = '127.0.0.1:5000';
+    let token = null;
+    let isAdmin = false;
+
+    function navigateHome() {
+        window.location.href = '#';
+    }
+    // login
+
+    function openCreateForm() {
+        
+    }
+
+    function closeCreateForm() {
+        const overlay = document.getElementById('createForm');
+        overlay.classList.remove('show');
+    }
+
+    function togglePopup() {
+        const overlay = document.getElementById('popupOverlay');
+        overlay.classList.toggle('show');
+    }
+
+    // loadfile
+    var loadFile = function (event) {
+        var output = document.getElementById('output');
+        output.src = URL.createObjectURL(event.target.files[0]);
+        output.onload = function () {
+            URL.revokeObjectURL(output.src)
+        }
+        let uploadElements = document.querySelectorAll('.uploads');
+        uploadElements.forEach(function (element) {
+            element.style.display = 'block';
+        });
+    };
+
+    $(document).ready(function () {
+        $(".detecting").attr("style", "display: none;")
+        $(".food_name").attr("style", "display: none;")
+        $(".detect").click(function () {
+            $(".detect").attr("style", "display: none;")
+            $(".detecting").attr("style", "display: block;")
+
+            var number_result = 30
+
+            var fileInput = $('#formFile')[0].files[0];
+            if (fileInput) {
+                var fileExtension = fileInput.name.split('.').pop().toLowerCase();
+                var allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+
+                if (allowedExtensions.indexOf(fileExtension) === -1) {
+                    $(".detecting").attr("style", "display: none;")
+                    $(".detect").attr("style", "display: block;")
+                    alert('Invalid file format. Only files with the format: ' + allowedExtensions.join(', '));
+                    return;
+                }
+
+                var formData = new FormData();
+
+                formData.append('image', fileInput);
+                formData.append('number_result', number_result);
+                var url = window.location.href;
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        list_images = response.list_images;
+                        list_food_names = response.list_food_names;
+                        descriptions = response.descriptions;
+                        $(".result").empty()
+                        $(".food_name").attr("style", "display: block;")
+                        $(".food_name").html('Result: ')
+                        for (var i = 0; i < 40; i++) {
+                            $(".result").append(`
+                                <div class="col-5 text-white"> 
+                                    <div style="width: 200px; height: 200px; overflow: hidden; text-align: center;">
+                                        <img src="${list_images[i]}" style="width: auto; height: 200px; display: inline-block;">
+                                    </div>
+                                    <div style="width: 200px; overflow: hidden; text-align: center;">
+                                        <h5 style = "color: black; text-align: center, font-size: 10px">${list_food_names[i]}</h5>
+                                    </div>
+                                    <p style="max-height: 100px; width: 200px; overflow-y: scroll; color: black; scrollbar-width: none; font-size: 10px; padding: 3px; -ms-overflow-style: none; white-space: pre-line">${descriptions[i]}</p>
+                                </div>
+                            `);
+                        }
+
+                        console.log(response)
+
+                        $(".detect").attr("style", "display: block;")
+                        $(".detecting").attr("style", "display: none;")
+                    },
+                    error: function (jqXHR, textStatus, errorMessage) {
+                        $(".detecting").attr("style", "display: none;")
+                        $(".detect").attr("style", "display: block;")
+                        alert("An error when making prediction, Please check again!")
+                        console.log(errorMessage);
+                        $(".detect").attr("style", "display: block;")
+                        $(".detecting").attr("style", "display: none;")
+                    }
+                });
+            } else {
+                alert("Please select a file!")
+                $(".detecting").attr("style", "display: none;")
+                $(".detect").attr("style", "display: block;")
+                return
+            }
+        })
+    });
+</script>
+
+</html>

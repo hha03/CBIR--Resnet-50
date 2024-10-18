@@ -1,0 +1,32 @@
+tạo bộ nhớ đệm
+
+khi xóa thì tạo thêm trường visial bool mặc định 0
+0: ko hiển thi lên màn hình
+1: hiển thị lên màn
+
+phân quyền cho admin và user
+user chỉ có quyền upload lên mặc định visibal là 0
+admin confirm visibal chuyển thành 1 còn ko confirm vẫn giữ nguyên là 0
+
+khi xóa thì visial thay đổi từ 1 thành 0
+khi admin restore thì visibal thay đổi từ 0 thành 1
+
+
+------------------------------------------------------
+thuyết trình nói về lấy giá trị từ đâu
+
+
+----------------------------------------------------
+
+1. Kích Thước của Các Kiểu Dữ Liệu BLOB
+BLOB: Kiểu dữ liệu BLOB (Binary Large Object) trong MySQL có thể lưu trữ tối đa khoảng 64 KiloB.
+
+LONGBLOB: Kiểu dữ liệu LONGBLOB có thể lưu trữ dữ liệu nhị phân lên đến 4 GigaB.
+
+kích thước vector: 392 kilob  ~390kB
+
+- BLOB (Binary Large Object) data type in MySQL can store up to about 64 KB.
+- LONGBLOB data type can store binary data up to 4 GB.
+- Vector size: 392 kB ~390kB
+-> I use data type LONGBLOB for [feature] field
+ 
